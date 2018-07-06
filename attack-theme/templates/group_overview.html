@@ -1,0 +1,52 @@
+{% extends "two-column.html" %} 
+{% set title = "Groups - MITRE ATT&CK&trade;" %}
+{% set active_page = "groups" -%}
+
+{% block innerleft %}
+    <div class="nav flex-column col-xl-2 col-lg-2 col-md-3  sidebar nav pt-5 pb-3 pl-3 border-right" id="v-tab" role="tablist" aria-orientation="vertical">
+        <span class="heading" id="v-home-tab" aria-selected="false">GROUPS</span>
+        <!-- <a class="nav-link side active show" id="v-overview-tab" data-toggle="tab" href="#v-overview" role="tab" aria-controls="v-overview" aria-selected="false">Overview</a> -->
+       {{page.links}}
+    </div>
+{% endblock %}
+
+{% block innerright %}
+{{ super () }}
+<ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="../">Home</a></li>
+    <li class="breadcrumb-item"><a href="index.html">Groups</a></li>
+</ol>
+<div class="tab-pane fade show active" id="v-{{pages.title}}" role="tabpanel" aria-labelledby="v-{{pages.title}}-tab"></div>
+<div class="row">
+   <div class="col-xl-10">
+      <div class="jumbotron jumbotron-fluid bg-white">
+         <div class="container-fluid">
+            <div>
+                <h1 class="display-4">
+                  Groups
+                </h1>
+                <p>Groups are sets of related intrusion activity that are tracked by a common name in the security community. Groups are also sometimes referred to as campaigns or intrusion sets. Some groups have multiple names associated with the same set of activities due to various organizations tracking the same set of activities by different names. Organizations’ group definitions may be only partially overlapping and may be in disagreement on specific activity.
+                <br><br>
+                Groups are mapped to publicly reported technique use and referenced in the ATT&CK threat model. Groups are also mapped to reported software used during intrusions.</p>
+        
+                <table class="table table-bordered table-light mt-2">
+                    <thead>
+                      <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Alias</th>
+                        <th scope="col">Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {{page.table}}
+                    </tbody>
+                  </table>
+              </div>
+            
+           
+         </div>
+      </div>
+   </div>
+</div>
+</div>
+{% endblock %}

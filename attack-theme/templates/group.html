@@ -1,0 +1,81 @@
+{% extends "two-column.html" %} 
+{% set title = "Group: " + page.aliases + " - MITRE ATT&CK&trade;" -%} 
+{% set active_page = "groups" -%}
+
+{% block heading %}
+{{ super () }}
+  <script src="/theme/scripts/group.js"></script>
+{%  endblock %}
+
+{% block innerleft %}
+    <div class="nav flex-column col-xl-2 col-lg-2 col-md-3  sidebar nav pt-5 pb-3 pl-3 border-right" id="v-tab" role="tablist" aria-orientation="vertical">
+        <span class="heading" id="v-home-tab" aria-selected="false">GROUPS</span>
+        <!-- <a class="nav-link side active show" id="v-overview-tab" data-toggle="tab" href="#v-overview" role="tab" aria-controls="v-overview" aria-selected="false">Overview</a> -->
+       {{page.links}}
+    </div>
+{% endblock %}
+
+{% block innerright %}
+{{ super () }}
+<ol class="breadcrumb">
+  <li class="breadcrumb-item"><a href="/">Home</a></li>
+  <li class="breadcrumb-item"><a href="index.html">Groups</a></li>
+</ol>
+<div class="tab-pane fade show active" id="v-{{pages.title}}" role="tabpanel" aria-labelledby="v-{{pages.title}}-tab"></div>
+<div class="row">
+   <div class="col-xl-10">
+      <div class="jumbotron jumbotron-fluid bg-white">
+         <div class="container-fluid">
+            <h1 class="display-4">
+               {{page.title}}
+            </h1>
+            <h2 class="pt-3">Description</h2>
+            <div class="row">
+               <div class="col-md-8">
+                  <p>{{page.description}}</p>
+               </div>
+               <div class="col-md-4">
+                  <div class="card">
+                     <div class="card-body">
+                        <span class="h5 card-title">ID</span>: {{page.id}} <br><br>
+                        <span class="h5 card-title">Aliases</span>: {{page.aliases}} <br><br>
+                       {{page.contributors}}
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <h2 class="pt-3">Aliases</h2>
+            {{page.aliases}}
+            </ul>
+            
+                  {{page.techniques}}
+              
+            {{page.software}}
+            <h2 class="pt-3">References</h2>
+            <div class="row">
+               <div class="col">
+                  <ol>
+                      {{page.bottom_ref_l}}
+                  </ol>
+               </div>
+               <div class="col">
+                  <ol>
+                      {{page.bottom_ref_r}}
+                  </ol>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="col-xl-2 col-lg-2 col-md-0 d-block d-sm-none d-md-none d-lg-block">
+      <p>Content</p>
+      <a href="#">Description</a><br>
+      <a href="#">Aliases</a><br>
+      <a href="#">Techniques Used</a></br>
+      <a href="#">Software</a></br>
+      <a href="#">References</a>
+   </div>
+</div>
+</div>
+{{page.scripts}}
+{% endblock %}

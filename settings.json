@@ -1,0 +1,15 @@
+{
+    "development": "true",
+    "domains": ["enterprise-attack", "mobile-attack", "pre-attack"],
+    "domain_aliases": ["Enterprise", "Mobile", "PRE-ATT&CK"],
+    "navigation_menu": [
+        ["/matrix/enterprise", "matrices", "Matrices"],
+        ["/tactics/", "tactics", "Tactics"],
+        ["/techniques/", "techniques", "Techniques"],
+        ["/groups/", "groups", "Groups"],
+        ["/software.html", "software", "Software"],
+        ["/resources.html", "resources", "Resources"],
+        ["/blog.html", "blog", "Blog"],
+        ["/contact.html", "contact", "Contact"]
+    ]
+}
