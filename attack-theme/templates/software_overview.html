@@ -1,0 +1,106 @@
+{% extends "two-column.html" %} 
+
+{% block nav %}
+{{ super () }}
+<nav class='navbar navbar-expand-lg navbar-dark fixed-top bg-orange border-bottom'>
+    <a class='navbar-brand' href='#'><img class='d-lg-inline' src='/theme/images/logo-white-small.png'></a>
+    <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse' aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation'>
+      <span class='navbar-toggler-icon'></span>
+    </button>
+    <div class='collapse navbar-collapse' id='navbarCollapse'>
+      <ul class='nav nav-tabs ml-auto'>
+        <li class='nav-item'><a class='nav-link' href='/'>Home</a></li>
+        <li class='nav-item'><a class='nav-link ' href='/matrix/enterprise'>Matrices</a></li>
+        <li class='nav-item dropdown'>
+          <a class='nav-link dropdown-toggle' href='tactics.html' id='navbarDropdown' role='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
+            Tactics
+          </a>
+          <div class='dropdown-menu' aria-labelledby='navbarDropdown'>
+            <a class='dropdown-item' href='tactics.html'>Enterprise</a>
+            <a class='dropdown-item' href='tactics.html'>Mobile</a>
+            <a class='dropdown-item' href='tactics.html'>PRE-ATT&amp;CK</a>
+          </div>
+        </li>
+        <li class='nav-item dropdown'>
+          <a class='nav-link dropdown-toggle' href='techniques.html' id='navbarDropdown' role='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
+            Techniques
+          </a>
+          <div class='dropdown-menu' aria-labelledby='navbarDropdown'>
+            <a class='dropdown-item' href='techniques.html'>Enterprise</a>
+            <a class='dropdown-item' href='techniques.html'>Mobile</a>
+            <a class='dropdown-item' href='techniques.html'>PRE-ATT&amp;CK</a>
+          </div>
+        </li>
+        <li class='nav-item'><a class='nav-link active' href='index.html'>Groups</a></li>
+        <li class='nav-item'><a class='nav-link' href='software.html'>Software<span class='sr-only'>(current)</span></a></li>
+        <li class='nav-item'><a class='nav-link' href='resources.html'>Resources</a></li>
+        <li class='nav-item'><a class='nav-link' href='blog.html'>Blog</a></li>
+        <li class='nav-item'><a class='nav-link' href='contact.html'>Contact</a></li>
+      </ul>
+    </div>
+     <ul class='navbar-nav flex-row ml-md-auto d-none d-md-flex'>
+      <li>
+        <form class='form-inline pl-2'>
+          <input class='form-control' type='text' placeholder='Search site' aria-label='Search'>
+        </form>
+      </li>
+    </ul>
+</nav>
+{% endblock %}
+
+{% set active_page = "software" -%}
+
+{% block innerleft %}
+    <div class="nav flex-column col-xl-2 col-lg-2 col-md-3  sidebar nav pt-5 pb-3 pl-3 border-right" id="v-tab" role="tablist" aria-orientation="vertical">
+        <span class="heading" id="v-home-tab" aria-selected="false">SOFTWARE</span>
+        <!-- <a class="nav-link side active show" id="v-overview-tab" data-toggle="tab" href="#v-overview" role="tab" aria-controls="v-overview" aria-selected="false">Overview</a> -->
+       {{page.links}}
+    </div>
+{% endblock %}
+
+{% block innerright %}
+{{ super () }}
+<ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="../">Home</a></li>
+    <li class="breadcrumb-item"><a href="index.html">Software</a></li>
+</ol>
+<div class="tab-pane fade show active" id="v-{{pages.title}}" role="tabpanel" aria-labelledby="v-{{pages.title}}-tab"></div>
+<div class="row">
+   <div class="col-xl-10">
+      <div class="jumbotron jumbotron-fluid bg-white">
+         <div class="container-fluid">
+            <div>
+                <h1 class="display-4">
+                  Software
+                </h1>
+                <p>Software is a generic term for custom or commercial code, operating system utilities, open-source software, or other tools used to conduct behavior modeled in ATT&amp;CK. Some instances of software have multiple names associated with the same instance due to various organizations tracking the same set of software by different names. Software entries are tagged with enterprise techniques and may be mapped to Groups.<br><br>
+
+                    Software is broken down into three high-level categories:
+                    </p><ul>
+                        <li>Tool - Commercial, open-source, or publicly available software that could be used by a defender, pen tester, red teamer, or an adversary for malicious purposes that generally is not found on an enterprise system. Examples include PsExec, Metasploit, Mimikatz, etc.</li> <br>
+  
+                        <li>Utility - Software generally available as part of an operating system that is already present in an environment. Adversaries tend to leverage existing functionality on systems to gather information and perform actions. Examples include Windows utilities such as Net, netstat, Tasklist, etc.</li> <br>
+  
+                        <li>Malware - Commercial, custom closed source, or open source software intended to be used for malicious purposes by adversaries. Examples include PlugX, CHOPSTICK, etc.</li><br>
+                      </ul>
+                <table class="table table-bordered table-light mt-2">
+                    <thead>
+                      <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Alias</th>
+                        <th scope="col">Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {{page.table}}
+                    </tbody>
+                  </table>
+              </div>
+            
+           
+         </div>
+      </div>
+   </div>
+</div>
+</div>
+{% endblock %}
