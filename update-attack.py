@@ -5,7 +5,7 @@ import json
 import requests
 
 from subprocess import check_output
-from modules import group, matrix, util
+from modules import group, matrix, util, software
 
 def main():
     parser = argparse.ArgumentParser(description="Update ATT&CK matrices and kick off the publish process")
@@ -66,9 +66,11 @@ def main():
 
 
     group.generate()
+    software.generate()
     returned_out = check_output("pelican content", shell=True)
     print(returned_out)
     group.updateLinkSections()
+    software.updateLinkSections()
     #nav.generate()
 
     matrix.generate(DOMAINS)

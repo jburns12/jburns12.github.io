@@ -29,11 +29,13 @@
             <h1 class="display-4">
                {{page.title}}
             </h1>
-            <h2 class="pt-3">Description</h2>
+            
+            <h2 class="pt-3" id="description">Description</h2>
             <div class="row">
                <div class="col-md-8">
                   <p>{{page.description}}</p>
                </div>
+              
                <div class="col-md-4">
                   <div class="card">
                      <div class="card-body">
@@ -44,36 +46,27 @@
                   </div>
                </div>
             </div>
-            <h2 class="pt-3">Aliases</h2>
+            <h2 class="pt-3" id="aliases">Aliases</h2>
             {{page.aliases}}
             </ul>
             
                   {{page.techniques}}
               
             {{page.software}}
-            <h2 class="pt-3">References</h2>
-            <div class="row">
-               <div class="col">
-                  <ol>
-                      {{page.bottom_ref_l}}
-                  </ol>
-               </div>
-               <div class="col">
-                  <ol>
-                      {{page.bottom_ref_r}}
-                  </ol>
-               </div>
-            </div>
+            
+            <h2 id="references" class="pt-3" >References</h2>
+            {{page.bottom_ref}}
+          
          </div>
       </div>
    </div>
    <div class="col-xl-2 col-lg-2 col-md-0 d-block d-sm-none d-md-none d-lg-block">
       <p>Content</p>
-      <a href="#">Description</a><br>
-      <a href="#">Aliases</a><br>
-      <a href="#">Techniques Used</a></br>
-      <a href="#">Software</a></br>
-      <a href="#">References</a>
+      <a href="#description">Description</a><br>
+      <a href="#aliases">Aliases</a><br>
+      <a href="#techniques">Techniques Used</a></br>
+      <a href="#software">Software</a></br>
+      <a href="#references">References</a>
    </div>
 </div>
 </div>

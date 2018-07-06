@@ -1,12 +1,115 @@
 {% extends "two-column.html" %} 
 {% set active_page = "software" -%}
+{% block heading %}
+{{ super () }}
+  <script src="/theme/scripts/group.js"></script>
+{%  endblock %}
+{% block nav %}
+{{ super () }}
+<nav class='navbar navbar-expand-lg navbar-dark fixed-top bg-orange border-bottom'>
+    <a class='navbar-brand' href='/'><img class='d-lg-inline' src='/theme/images/logo-white-small.png'></a>
+    <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarCollapse' aria-controls='navbarCollapse' aria-expanded='false' aria-label='Toggle navigation'>
+      <span class='navbar-toggler-icon'></span>
+    </button>
+    <div class='collapse navbar-collapse' id='navbarCollapse'>
+      <ul class='nav nav-tabs ml-auto'>
+        <li class='nav-item'><a class='nav-link' href='/'>Home</a></li>
+        <li class='nav-item'><a class='nav-link ' href='/matrix/enterprise'>Matrices</a></li>
+        <li class='nav-item dropdown'>
+          <a class='nav-link dropdown-toggle' href='tactics.html' id='navbarDropdown' role='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
+            Tactics
+          </a>
+          <div class='dropdown-menu' aria-labelledby='navbarDropdown'>
+            <a class='dropdown-item' href='tactics.html'>Enterprise</a>
+            <a class='dropdown-item' href='tactics.html'>Mobile</a>
+            <a class='dropdown-item' href='tactics.html'>PRE-ATT&amp;CK</a>
+          </div>
+        </li>
+        <li class='nav-item dropdown'>
+          <a class='nav-link dropdown-toggle' href='techniques.html' id='navbarDropdown' role='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
+            Techniques
+          </a>
+          <div class='dropdown-menu' aria-labelledby='navbarDropdown'>
+            <a class='dropdown-item' href='techniques.html'>Enterprise</a>
+            <a class='dropdown-item' href='techniques.html'>Mobile</a>
+            <a class='dropdown-item' href='techniques.html'>PRE-ATT&amp;CK</a>
+          </div>
+        </li>
+        <li class='nav-item'><a class='nav-link active' href='index.html'>Groups</a></li>
+        <li class='nav-item'><a class='nav-link' href='software.html'>Software<span class='sr-only'>(current)</span></a></li>
+        <li class='nav-item'><a class='nav-link' href='resources.html'>Resources</a></li>
+        <li class='nav-item'><a class='nav-link' href='blog.html'>Blog</a></li>
+        <li class='nav-item'><a class='nav-link' href='contact.html'>Contact</a></li>
+      </ul>
+    </div>
+     <ul class='navbar-nav flex-row ml-md-auto d-none d-md-flex'>
+      <li>
+        <form class='form-inline pl-2'>
+          <input class='form-control' type='text' placeholder='Search site' aria-label='Search'>
+        </form>
+      </li>
+    </ul>
+</nav>
+{% endblock %}
+{% set active_page = "software" -%}
 
 {% block innerleft %}
-{{ super () }}
-
+    <div class="nav flex-column col-xl-2 col-lg-2 col-md-3  sidebar nav pt-5 pb-3 pl-3 border-right" id="v-tab" role="tablist" aria-orientation="vertical">
+        <span class="heading" id="v-home-tab" aria-selected="false">SOFTWARE</span>
+        <!-- <a class="nav-link side active show" id="v-overview-tab" data-toggle="tab" href="#v-overview" role="tab" aria-controls="v-overview" aria-selected="false">Overview</a> -->
+       {{page.links}}
+    </div>
 {% endblock %}
 
 {% block innerright %}
 {{ super () }}
+<ol class="breadcrumb">
+  <li class="breadcrumb-item"><a href="/">Home</a></li>
+  <li class="breadcrumb-item"><a href="index.html">Software</a></li>
+</ol>
+<div class="tab-pane fade show active" id="v-{{pages.title}}" role="tabpanel" aria-labelledby="v-{{pages.title}}-tab"></div>
+<div class="row">
+   <div class="col-xl-10">
+      <div class="jumbotron jumbotron-fluid bg-white">
+         <div class="container-fluid">
+            <h1 class="display-4">
+               {{page.title}}
+            </h1>
+            <h2 class="pt-3" id="description">Description</h2>
+            <div class="row">
+               <div class="col-md-8">
+                  <p>{{page.description}}</p>
+               </div>
+               <div class="col-md-4">
+                  <div class="card">
+                     <div class="card-body">
+                        <span class="h5 card-title">ID</span>: {{page.id}} <br><br>
+                        <span class="h5 card-title">Aliases</span>: {{page.aliases}} <br><br>
+                      
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <h2 class="pt-3" id="aliases">Aliases</h2>
+            {{page.aliases}}
+            </ul>
+            
+                  {{page.techniques}}
+              
+            
+            <h2 class="pt-3" id="references">References</h2>
+            {{page.bottom_ref}}
+         </div>
+      </div>
+   </div>
+   <div class="col-xl-2 col-lg-2 col-md-0 d-block d-sm-none d-md-none d-lg-block">
+      <p>Content</p>
+      <a href="#description">Description</a><br>
+      <a href="#aliases">Aliases</a><br>
+      <a href="#techniques">Techniques Used</a></br>
+      <a href="#references">References</a>
+   </div>
+</div>
+</div>
 
 {% endblock %}

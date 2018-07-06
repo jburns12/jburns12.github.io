@@ -44,10 +44,11 @@ def grabTechniqueList(attack_path):
         for entry in attack_obj["objects"]:
                 if  isinstance(entry.get("external_references"), collections.Iterable)  :
                     ext_ref = entry.get("external_references")
-                    foundIndex = findIndexGid(ext_ref)
-                    if foundIndex != -1:
+                    #foundIndex = findIndexGid(ext_ref)
+                    '''if foundIndex != -1:
                         if  ext_ref[foundIndex].get("external_id") is not None and "T" in ext_ref[foundIndex].get("external_id"):
-                            #print(ext_ref[0].get("external_id"))
+                            #print(ext_ref[0].get("external_id"))'''
+                    if "attack-pattern" in entry.get("type"):
                             tech_list.append(entry)
     return tech_list
 
@@ -130,12 +131,11 @@ def generateMarkdownFiles(markdown_path, group_list):
             md_file.write("ID: "+gid+"\n")
             md_file.write("Aliases: "+aliases+"\n")
             md_file.write("Contributors: {}\n")
-            md_file.write("save_as: groups/"+gid.upper()+".html \n")
+            md_file.write("save_as: groups/"+gid.upper()+"/index.html \n")
             md_file.write("Links: {} \n")
             md_file.write("Techniques: {} \n")
             md_file.write("Software: {} \n")
-            md_file.write("Bottom_ref_l: {} \n")
-            md_file.write("Bottom_ref_r: {} \n")
+            md_file.write("Bottom_ref: {} \n")
             md_file.write("Description: {} \n")
             md_file.write("Scripts: {} \n")
             md_file.close()
@@ -144,14 +144,14 @@ def generateMarkdownFiles(markdown_path, group_list):
 def genLinks(group_list, obj):
     ''' Responsible for generating the links that are located on the left side of group pages'''
 
-    link_template = " <a class=\"nav-link side\" id=\"v-{}-tab\"  href=\"{}.html\"  aria-controls=\"v-{}\" aria-selected=\"false\">{}</a>"
-    active_link_template = " <a class=\"nav-link side active show\" id=\"v-{}-tab\"  href=\"{}.html\" aria-controls=\"v-{}\" aria-selected=\"false\">{}</a>"
+    link_template = " <a class=\"nav-link side\" id=\"v-{}-tab\"  href=\"{}\"  aria-controls=\"v-{}\" aria-selected=\"false\">{}</a>"
+    active_link_template = " <a class=\"nav-link side active show\" id=\"v-{}-tab\"  href=\"{}\" aria-controls=\"v-{}\" aria-selected=\"false\">{}</a>"
     #Start the formation of link section with overview, and then add the others
     overview_title = "Overview"
     #If the passed obj is overview, generate the overview html variable
     #Else generate the links for the group entry that is passed
     if "overview" in obj.get("name"):
-        link_html_var = active_link_template.format(overview_title.lower(), "index", overview_title.lower(), overview_title)+"\n"
+        link_html_var = active_link_template.format(overview_title.lower(), "/groups/", overview_title.lower(), overview_title)+"\n"
         for obj_inner in group_list:
             title = obj_inner.get("name")
             if  isinstance(obj_inner.get("external_references"), collections.Iterable)  :
@@ -161,9 +161,9 @@ def genLinks(group_list, obj):
                     if  ext_ref[foundIndex].get("external_id") is not None and "G" in ext_ref[foundIndex].get("external_id") and  obj_inner.get("name") is not None:
                         gid = ext_ref[foundIndex].get("external_id")
                         #create normal links
-                        link_html_var = link_html_var + link_template.format(gid.lower(), gid.upper(), gid.lower(), title)+"\n"
+                        link_html_var = link_html_var + link_template.format(gid.lower(), "/groups/"+gid.upper()+"/", gid.lower(), title)+"\n"
     else:
-        link_html_var = link_template.format(overview_title.lower(), "index", overview_title.lower(), overview_title)+"\n"
+        link_html_var = link_template.format(overview_title.lower(), "/groups/", overview_title.lower(), overview_title)+"\n"
         for obj_inner in group_list:
             #If the passed object matches the current one in the traversal, create an active link for it
             #Else, will create the links that are not active
@@ -176,7 +176,7 @@ def genLinks(group_list, obj):
                         if  ext_ref[foundIndex].get("external_id") is not None and "G" in ext_ref[foundIndex].get("external_id") and  obj.get("name") is not None:
                             gid = ext_ref[foundIndex].get("external_id")
                             #create active links
-                            link_html_var = link_html_var + active_link_template.format(gid.lower(), gid.upper(), gid.lower(), title)+"\n"
+                            link_html_var = link_html_var + active_link_template.format(gid.lower(),  "/groups/"+gid.upper()+"/", gid.lower(), title)+"\n"
             else:
                 title = obj_inner.get("name")
                 if  isinstance(obj_inner.get("external_references"), collections.Iterable)  :
@@ -186,7 +186,7 @@ def genLinks(group_list, obj):
                         if  ext_ref[foundIndex].get("external_id") is not None and "G" in ext_ref[foundIndex].get("external_id") and  obj_inner.get("name") is not None:
                             gid = ext_ref[foundIndex].get("external_id")
                             #create normal links
-                            link_html_var = link_html_var + link_template.format(gid.lower(), gid.upper(), gid.lower(), title)+"\n"
+                            link_html_var = link_html_var + link_template.format(gid.lower(),  "/groups/"+gid.upper()+"/", gid.lower(), title)+"\n"
     return link_html_var
 
 
@@ -206,11 +206,13 @@ def generate():
 
 def updateLinkSections():
     '''  The main function used to load dynamic links, and tables into the pages created by pelican'''
-    attack_path = "stix/enterprise-attack.json"
+    ent_attack_path = "stix/enterprise-attack.json"
+    mob_attack_path = "stix/mobile-attack.json"
+    pre_attack_path = "stix/pre-attack.json"
     html_path = "output/groups/"
     #Reads the json attack stig and creates a list of the ATTACK Groups
-    group_list = grabGroupList(attack_path)
-    technique_list = grabTechniqueList(attack_path)
+    group_list = grabGroupList(ent_attack_path)
+    technique_list = grabTechniqueList(ent_attack_path)
     #Generate the technique table for the right sections and assign to variable
     tech_table_dict = generateTechniqueTable()
     #Generate the software table
@@ -261,15 +263,15 @@ def updateLinkSections():
                         description_ref_section = gen_descr_ref_sect(generated_references_list, descr)
                         
 
-                        generated_references_bottom_section_dict = gen_ref_bottom_sect(generated_references_list)
-                        js_Scripts = genScripts(len(generated_references_list))
+                        generated_refs_bottom_sect = gen_ref_bottom_sect(generated_references_list)
+                        js_Scripts = ""#genScripts(len(generated_references_list))
                         #Save the generated areas into the placeholders
-                        html_file = open(html_path+gid.upper()+".html", "r")
+                        html_file = open(html_path+gid.upper()+"/index.html", "r")
                         html_content = html_file.read()
-                        new_html = html_content.format(generated_links,description_ref_section,generated_contributors_sect, generated_technique_table, generated_software_table, generated_references_bottom_section_dict.get("left"),generated_references_bottom_section_dict.get("right"),js_Scripts)
+                        new_html = html_content.format(generated_links,description_ref_section,generated_contributors_sect, generated_technique_table, generated_software_table, generated_refs_bottom_sect,js_Scripts)
                         html_file.close()
 
-                        new_html_file = open(html_path+gid.upper()+".html", "w", encoding='utf8')
+                        new_html_file = open(html_path+gid.upper()+"/index.html", "w", encoding='utf8')
                         new_html_file.write(new_html)
                         new_html_file.close()
 
@@ -315,7 +317,7 @@ def updateLinkSections():
                      aliases = aliases + aliases_list[ali_count]+", <br> "
                 ali_count = ali_count + 1
             
-            top_row_v = "<tr><td><a href=\""+gid.upper()+".html\">"+main_group_title+"</a></td>"
+            top_row_v = "<tr><td><a href=\"/groups/"+gid.upper()+"/\">"+main_group_title+"</a></td>"
             middle_row_v = "<td>"+aliases+"</td>"
             end_row_v = "<td>"+descr+"</td></tr>"
             overview_table_v = overview_table_v +"\n"+top_row_v+"\n"+middle_row_v+"\n"+end_row_v+"\n"
@@ -354,15 +356,28 @@ def grabRelationship(attack_path, option):
 
 def generateTechniqueTable():
     ''' This function creates a dictionary of all the relationships linked that are needed for the technique table'''
-    techniqueOuterTemp = "<h2 class=\"pt-3\">Techniques Used</h2>" + "<table class=\"table table-bordered table-light mt-2\">" + "<thead><tr> <th scope=\"col\">Domain</th><th scope=\"col\">ID</th><th scope=\"col\">Name</th><th scope=\"col\">Use</th>" +"  </tr></thead><tbody> {} </tbody></table>"
+    techniqueOuterTemp = "<h2 class=\"pt-3\" id =\"techniques\">Techniques Used</h2>" + "<table class=\"table table-bordered table-light mt-2\">" + "<thead><tr> <th scope=\"col\">Domain</th><th scope=\"col\">ID</th><th scope=\"col\">Name</th><th scope=\"col\">Use</th>" +"  </tr></thead><tbody> {} </tbody></table>"
     table_dict = {}
-    attack_path = "stix/enterprise-attack.json"
+    ent_attack_path = "stix/enterprise-attack.json"
+    mob_attack_path = "stix/mobile-attack.json"
+    pre_attack_path = "stix/pre-attack.json"
     attack_json = ""
-    #grab a list of techniques, groups, and relationships from attack stig
-    tech_list = grabTechniqueList(attack_path)
-    rel_list = grabRelationship(attack_path, "GT")
-    group_list = grabGroupList(attack_path)
+    #grab a list of techniques, groups, and relationships from attack stig for enterprise attack
+    tech_list = grabTechniqueList(ent_attack_path)
+    rel_list = grabRelationship(ent_attack_path, "GT")
+    group_list = grabGroupList(ent_attack_path)
+
+    mob_tech_list = grabTechniqueList(mob_attack_path)
+    mob_rel_list = grabRelationship(mob_attack_path, "GT")
+    mob_group_list = grabGroupList(mob_attack_path)
     
+    pre_tech_list = grabTechniqueList(pre_attack_path)
+    pre_rel_list = grabRelationship(pre_attack_path, "GT")
+    pre_group_list = grabGroupList(pre_attack_path)
+
+    group_list = group_list + mob_group_list + pre_group_list
+    tech_list = tech_list + mob_tech_list + pre_tech_list
+    rel_list = rel_list + mob_rel_list + pre_rel_list
     #Go to each group
     for group in group_list:
         #print(group.get("external_references")[0].get("external_id"))
@@ -382,12 +397,16 @@ def generateTechniqueTable():
         technique_table = ""
         flag = False
         for logt in list_of_group_techniques:
+            description = ""
+            if logt.get("rel").get("description") is not None:
+                description = logt.get("rel").get("description")
+            domain = mapDomain(logt.get("tech").get("kill_chain_phases")[0].get("kill_chain_name"))
             flag = True
             foundIndex = findIndexGid(logt.get("tech").get("external_references"))
             if foundIndex != -1:
-                tr_row_1 = "<tr><td>Enterprise</td><td><a href=\"/techniques/"+logt.get("tech").get("external_references")[foundIndex].get("external_id")+".html\">"+logt.get("tech").get("external_references")[foundIndex].get("external_id")+"</a></td>"
-                tr_row_2 = "<td><a href=\"/techniques/"+logt.get("tech").get("external_references")[foundIndex].get("external_id")+".html\">"+logt.get("tech").get("name")+"</a></td>"
-                tr_row_3 = "<td>"+logt.get("rel").get("description")+"</td></tr>"
+                tr_row_1 = "<tr><td>"+domain +"</td><td><a href=\"/techniques/"+logt.get("tech").get("external_references")[foundIndex].get("external_id")+"/\">"+logt.get("tech").get("external_references")[foundIndex].get("external_id")+"</a></td>"
+                tr_row_2 = "<td><a href=\"/techniques/"+logt.get("tech").get("external_references")[foundIndex].get("external_id")+"/\">"+logt.get("tech").get("name")+"</a></td>"
+                tr_row_3 = "<td>"+description+"</td></tr>"
                 technique_table = technique_table + tr_row_1 + tr_row_2 + tr_row_3
         if flag:
             foundIndex = findIndexGid(group.get("external_references"))
@@ -401,7 +420,7 @@ def generateTechniqueTable():
 
 def generateSoftwareTable():
     ''' This is responsible for generating the software html table '''
-    softwareOuterTemplate = "<h2 class=\"pt-3\">Software</h2><table class=\"table table-bordered table-light mt-2\"><thead><tr><th scope=\"col\">ID</th><th scope=\"col\">Name</th><th scope=\"col\">Techniques</th></tr></thead><tbody> {}"+" </tbody></table>"
+    softwareOuterTemplate = "<h2 class=\"pt-3\" id=\"software\"  >Software</h2><table class=\"table table-bordered table-light mt-2\"><thead><tr><th scope=\"col\">ID</th><th scope=\"col\">Name</th><th scope=\"col\">Techniques</th></tr></thead><tbody> {}"+" </tbody></table>"
 
 
     table_dict = {}
@@ -461,8 +480,8 @@ def generateSoftwareTable():
             if soft_dict.get("software") is not None:
                 foundIndex = findIndexGid(soft_dict.get("software").get("external_references"))
                 if foundIndex != -1:
-                    tr_row_1 = "<tr><td><a href=\"/software/"+soft_dict.get("software").get("external_references")[foundIndex].get("external_id")+".html\">"+soft_dict.get("software").get("external_references")[foundIndex].get("external_id")+"</a></td>"
-                    tr_row_2 = "<td><a href=\"/software/"+soft_dict.get("software").get("external_references")[foundIndex].get("external_id")+".html\">"+soft_dict.get("software").get("name")+"</a></td>"
+                    tr_row_1 = "<tr><td><a href=\"/software/"+soft_dict.get("software").get("external_references")[foundIndex].get("external_id")+"/\">"+soft_dict.get("software").get("external_references")[foundIndex].get("external_id")+"</a></td>"
+                    tr_row_2 = "<td><a href=\"/software/"+soft_dict.get("software").get("external_references")[foundIndex].get("external_id")+"/\">"+soft_dict.get("software").get("name")+"</a></td>"
                     tr_row_3 = "<td>"+tech_string+"</td></tr>"
                     software_table = software_table + tr_row_1 + tr_row_2 + tr_row_3
         #Store the generated html data to a dict that can be queried based on gid
@@ -475,6 +494,16 @@ def generateSoftwareTable():
             if foundIndex != -1:
                 table_dict[group.get("external_references")[foundIndex].get("external_id")] = ""
     return table_dict
+
+def mapDomain(text):
+    if text in "mitre-mobile-attack":
+        return "Mobile"
+    elif text in "mitre-attack":
+        return "Enterprise"
+    elif text in "mitre-pre-attack":
+        return "Pre-Attack"
+    else:
+        return "None"
 
 def gen_ref_list(description, ext_ref):
     if description is not None and ext_ref is not None:
@@ -525,14 +554,14 @@ def gen_ref_list(description, ext_ref):
     return url_list
 
 def gen_descr_ref_sect(url_list, description):
-    top_span_template = "<span onclick=scrollToRef('scite-{}')  id=\"scite-ref-{}-a\" class=\"scite-citeref-number\" data-reference=\"{}\"><a href=\"#scite-{}\" data-hasqtip=\"{}\" aria-describedby=\"qtip-{}\">[{}]</a></span>"
+    top_span_template = "<span onclick=scrollToRef('scite-{}')  id=\"scite-ref-{}-a\" class=\"scite-citeref-number\" data-reference=\"{}\"><a href=\"{}\" data-hasqtip=\"{}\" aria-describedby=\"qtip-{}\">[{}]</a></span>"
     list_of_top_sects = []
     top_sect = ""
     for url_obj in url_list:
         number = url_obj.get("number")
         sname = url_obj.get("sname")
         url = url_obj.get("url")
-        sect = top_span_template.format(number,number,sname,number,number - 1, number - 1, number)
+        sect = top_span_template.format(number,number,sname,url,number - 1, number - 1, number)
         counter = 0
         while counter < len(description):
             if counter < len(description) - 12:
@@ -555,38 +584,58 @@ def gen_descr_ref_sect(url_list, description):
     return description
 
 def gen_ref_bottom_sect(url_list):
+    div_row = "<div class=\"row\">{}</div>"
+    div_temp = "<div class=\"col\">{} </div>"
+    ol_temp = "<ol>{}</ol>"
+    ol_start_temp = "<ol start=\"{}\">{}</ol>"
     bottom_span_template = "<li><span  id=\"scite-{}\" class=\"scite-citation\"><span class=\"scite-citation-text\"><a rel=\"nofollow\" class=\"external text\" name=\"scite-{}\" href=\"{}\">{}</a></span></span></li>"
     list_of_bottom_sects = []
     bottom_sect_l = ""
     bottom_sect_r = ""
     bottom_sect_dict = {"left":"", "right":""}
     for url_obj in url_list:
-        number = url_obj.get("number")
-        sname = url_obj.get("sname")
-        url = url_obj.get("url")
-        description = url_obj.get("description")
-        sect = bottom_span_template.format(number,number,url,description)
-        
-        list_of_bottom_sects.append(sect)
+                number = url_obj.get("number")
+                sname = url_obj.get("sname")
+                url = url_obj.get("url")
+                description = url_obj.get("description")
+                sect = bottom_span_template.format(number,number,url,description)
+                
+                list_of_bottom_sects.append(sect)
     count = 0
-    if len(list_of_bottom_sects) % 2 == 0:
-        bottom_sect_r = "<ol start=\""+str(len(list_of_bottom_sects) / 2 + 1)+"\">"
-    else:
-        bottom_sect_r = "<ol start=\""+str(len(list_of_bottom_sects) / 2 + 2)+"\">"
     while count < len(list_of_bottom_sects):
-        bottom_s = list_of_bottom_sects[count]
+            bottom_s = list_of_bottom_sects[count]
+            
+            if count < len(list_of_bottom_sects) / 2:
+                bottom_sect_l = bottom_sect_l + bottom_s
+            else:
+                bottom_sect_r = bottom_sect_r + bottom_s
+            count = count + 1
+    if len(url_list) <= 1:
+
+        right_div = div_temp.format("")
+        bottom_sect_dict["right"] = right_div
+        left_ol = ol_temp.format(bottom_sect_l)
+        left_div = div_temp.format(left_ol)
+        bottom_sect_dict["left"] = left_div
+    else:
         
-        if count < len(list_of_bottom_sects) / 2:
-            bottom_sect_l = bottom_sect_l + bottom_s
+        left_ol = ol_temp.format(bottom_sect_l)
+        left_div = div_temp.format(left_ol)
+        if len(list_of_bottom_sects) % 2 == 0:
+            right_ol = ol_start_temp.format(str(len(list_of_bottom_sects) / 2 + 1), bottom_sect_r)
         else:
-            bottom_sect_r = bottom_sect_r + bottom_s
-        count = count + 1
-    bottom_sect_r = bottom_sect_r + "</ol>"
-    bottom_sect_dict["left"] = bottom_sect_l
-    bottom_sect_dict["right"] = bottom_sect_r
-    return bottom_sect_dict
+            right_ol = ol_start_temp.format(str(len(list_of_bottom_sects) / 2 + 2), bottom_sect_r)
+        right_div = div_temp.format(right_ol)
+      
+        bottom_sect_dict["left"] = left_div
+        bottom_sect_dict["right"] = right_div
+    
+    
+    return div_row.format(bottom_sect_dict.get("left") + bottom_sect_dict.get("right"))
+   
 
 def genScripts(totalRefs):
+    #Not Used
     '''Generates scripts that will ensure that the group page functions properly'''
     scriptTemplate = "<script>{}</script>"
 
