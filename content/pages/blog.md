@@ -1,3 +1,3 @@
 Title: Blog
-Template: Blog
+Template: blog
 save_as: blog.html
