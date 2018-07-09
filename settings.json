@@ -7,7 +7,7 @@
         ["/tactics/", "tactics", "Tactics"],
         ["/techniques/", "techniques", "Techniques"],
         ["/groups/", "groups", "Groups"],
-        ["/software.html", "software", "Software"],
+        ["/software/", "software", "Software"],
         ["/resources.html", "resources", "Resources"],
         ["/blog.html", "blog", "Blog"],
         ["/contact.html", "contact", "Contact"]
